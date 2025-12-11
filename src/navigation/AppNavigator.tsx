@@ -34,7 +34,7 @@ const MainTabs = ({route}: any) => {
         component={StatisticsScreen}
         initialParams={{userId}}
         options={{
-          tabBarLabel: 'Estatísticas',
+          tabBarLabel: 'Statistics',
           tabBarIcon: () => null,
         }}
       />
@@ -74,7 +74,7 @@ const AppNavigator = () => {
           name="AddMeasurement"
           component={AddMeasurementScreen}
           options={{
-            title: 'Nova Medição',
+            title: 'Novmeasurement',
             presentation: 'modal',
           }}
         />

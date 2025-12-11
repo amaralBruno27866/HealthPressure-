@@ -18,17 +18,17 @@ export const calculateIMC = (weight: number, height: number): number => {
  */
 export const classifyIMC = (imc: number): IMCClassification => {
   if (imc < 18.5) {
-    return 'Baixo peso';
+    return 'Underweight';
   } else if (imc >= 18.5 && imc < 25) {
-    return 'Peso normal';
+    return 'Normal weight';
   } else if (imc >= 25 && imc < 30) {
-    return 'Sobrepeso';
+    return 'Overweight';
   } else if (imc >= 30 && imc < 35) {
-    return 'Obesidade Grau I';
+    return 'Obesity Class I';
   } else if (imc >= 35 && imc < 40) {
-    return 'Obesidade Grau II';
+    return 'Obesity Class II';
   } else {
-    return 'Obesidade Grau III';
+    return 'Obesity Class III';
   }
 };
 
@@ -43,26 +43,26 @@ export const classifyBloodPressure = (
   diastolic: number,
 ): BloodPressureClassification => {
   if (systolic < 90 || diastolic < 60) {
-    return 'Hipotensão';
+    return 'Hypotension';
   } else if (systolic < 120 && diastolic < 80) {
     return 'Normal';
   } else if (
     (systolic >= 120 && systolic < 130) ||
     (diastolic >= 80 && diastolic < 85)
   ) {
-    return 'Pré-Hipertensão';
+    return 'Pre-Hypertension';
   } else if (
     (systolic >= 130 && systolic < 140) ||
     (diastolic >= 85 && diastolic < 90)
   ) {
-    return 'Hipertensão Estágio 1';
+    return 'Hypertension Stage 1';
   } else if (
     (systolic >= 140 && systolic < 180) ||
     (diastolic >= 90 && diastolic < 120)
   ) {
-    return 'Hipertensão Estágio 2';
+    return 'Hypertension Stage 2';
   } else {
-    return 'Crise Hipertensiva';
+    return 'Hypertensive Crisis';
   }
 };
 
@@ -88,19 +88,19 @@ export const getColorForClassification = (
   classification: BloodPressureClassification,
 ): string => {
   switch (classification) {
-    case 'Hipotensão':
-      return '#3498db'; // Azul
+    case 'Hypotension':
+      return '#3498db'; // Blue
     case 'Normal':
-      return '#2ecc71'; // Verde
-    case 'Pré-Hipertensão':
-      return '#f39c12'; // Amarelo
-    case 'Hipertensão Estágio 1':
-      return '#e67e22'; // Laranja
-    case 'Hipertensão Estágio 2':
-      return '#e74c3c'; // Vermelho
-    case 'Crise Hipertensiva':
-      return '#c0392b'; // Vermelho escuro
+      return '#2ecc71'; // Green
+    case 'Pre-Hypertension':
+      return '#f39c12'; // Yellow
+    case 'Hypertension Stage 1':
+      return '#e67e22'; // Orange
+    case 'Hypertension Stage 2':
+      return '#e74c3c'; // Red
+    case 'Hypertensive Crisis':
+      return '#c0392b'; // Dark Red
     default:
-      return '#95a5a6'; // Cinza
+      return '#95a5a6'; // Gray
   }
 };

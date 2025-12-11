@@ -35,15 +35,15 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
     try {
       const allUsers = await DatabaseService.getAllUsers();
       setUsers(allUsers);
-    } catch (error) {
-      console.error('Error loading users:', error);
-      Alert.alert('Erro', 'Não foi possível carregar os usuários');
+    } catch (Errorr) {
+      console.Errorr('Errorr loading users:', Errorr);
+      Alert.alert('Error', 'Could not load users');
     }
   };
 
   const handleAddUser = async () => {
     if (!formData.name || !formData.age || !formData.weight || !formData.height) {
-      Alert.alert('Erro', 'Preencha todos os campos');
+      Alert.alert('Error', 'Fill in all fields');
       return;
     }
 
@@ -57,25 +57,25 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
           weight: parseFloat(formData.weight),
           height: parseFloat(formData.height),
         });
-        Alert.alert('Sucesso', 'Usuário atualizado com sucesso!');
+        Alert.alert('Success', 'Usuário atualizado com Success!');
       } else {
-        // Adicionar novo usuário
+        // Adicionar novuser
         await DatabaseService.addUser({
           name: formData.name,
           age: parseInt(formData.age, 10),
           weight: parseFloat(formData.weight),
           height: parseFloat(formData.height),
         });
-        Alert.alert('Sucesso', 'Usuário adicionado com sucesso!');
+        Alert.alert('Success', 'Usuário adicionado com Success!');
       }
 
       setModalVisible(false);
       setFormData({name: '', age: '', weight: '', height: ''});
       setEditingUser(null);
       loadUsers();
-    } catch (error) {
-      console.error('Error saving user:', error);
-      Alert.alert('Erro', 'Não foi possível salvar o usuário');
+    } catch (Errorr) {
+      console.Errorr('Errorr saving user:', Errorr);
+      Alert.alert('Error', 'Não foi possível Save user');
     }
   };
 
@@ -92,21 +92,21 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
 
   const handleDeleteUser = (user: User) => {
     Alert.alert(
-      'Confirmar Exclusão',
-      `Deseja realmente excluir o usuário ${user.name}? Todas as medições associadas também serão excluídas.`,
+      'Confirm Deletion',
+      `Do you really want to delete user ${user.name}? All associated measurements will also be deleted.`,
       [
-        {text: 'Cancelar', style: 'cancel'},
+        {text: 'Cancel', style: 'cancel'},
         {
-          text: 'Excluir',
+          text: 'Delete',
           style: 'destructive',
           onPress: async () => {
             try {
               await DatabaseService.deleteUser(user.id!);
               loadUsers();
-              Alert.alert('Sucesso', 'Usuário excluído com sucesso!');
-            } catch (error) {
-              console.error('Error deleting user:', error);
-              Alert.alert('Erro', 'Não foi possível excluir o usuário');
+              Alert.alert('Success', 'Usuário excluído com Success!');
+            } catch (Errorr) {
+              console.Errorr('Errorr deleting user:', Errorr);
+              Alert.alert('Error', 'Could not delete user');
             }
           },
         },
@@ -130,14 +130,14 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
       onPress={() => handleSelectUser(item)}>
       <Text style={styles.userName}>{item.name}</Text>
       <Text style={styles.userInfo}>
-        {item.age} anos • {item.weight}kg • {item.height}cm
+        {item.age} years • {item.weight}kg • {item.height}cm
       </Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Selecione o Usuário</Text>
+      <Text style={styles.title}>Selecione user</Text>
 
       <FlatList
         data={users}
@@ -146,7 +146,7 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
           <Text style={styles.emptyText}>
-            Nenhum usuário cadastrado. Adicione um novo usuário!
+            No user registered. Add a new user!
           </Text>
         }
       />
@@ -154,7 +154,7 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
       <TouchableOpacity
         style={styles.addButton}
         onPress={handleOpenAddModal}>
-        <Text style={styles.addButtonText}>+ Adicionar Usuário</Text>
+        <Text style={styles.addButtonText}>+ Add User</Text>
       </TouchableOpacity>
 
       <Modal
@@ -168,19 +168,19 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
-              {editingUser ? 'Editar Usuário' : 'Novo Usuário'}
+              {editingUser ? 'Edit User' : 'Novuser'}
             </Text>
 
             <TextInput
               style={styles.input}
-              placeholder="Nome"
+              placeholder="Name"
               value={formData.name}
               onChangeText={text => setFormData({...formData, name: text})}
             />
 
             <TextInput
               style={styles.input}
-              placeholder="Idade"
+              placeholder="Age"
               keyboardType="numeric"
               value={formData.age}
               onChangeText={text => setFormData({...formData, age: text})}
@@ -188,7 +188,7 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
 
             <TextInput
               style={styles.input}
-              placeholder="Peso (kg)"
+              placeholder="Weight (kg)"
               keyboardType="decimal-pad"
               value={formData.weight}
               onChangeText={text => setFormData({...formData, weight: text})}
@@ -196,7 +196,7 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
 
             <TextInput
               style={styles.input}
-              placeholder="Altura (cm)"
+              placeholder="Height (cm)"
               keyboardType="numeric"
               value={formData.height}
               onChangeText={text => setFormData({...formData, height: text})}
@@ -209,14 +209,14 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
                   setModalVisible(false);
                   setEditingUser(null);
                 }}>
-                <Text style={styles.buttonText}>Cancelar</Text>
+                <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={[styles.modalButton, styles.saveButton]}
                 onPress={handleAddUser}>
                 <Text style={styles.buttonText}>
-                  {editingUser ? 'Atualizar' : 'Salvar'}
+                  {editingUser ? 'Atualizar' : 'Save'}
                 </Text>
               </TouchableOpacity>
             </View>

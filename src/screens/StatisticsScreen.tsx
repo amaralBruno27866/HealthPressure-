@@ -24,8 +24,8 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
       setLoading(true);
       const stats = await DatabaseService.getStatistics(userId);
       setStatistics(stats);
-    } catch (error) {
-      console.error('Error loading statistics:', error);
+    } catch (Errorr) {
+      console.Errorr('Errorr loading statistics:', Errorr);
     } finally {
       setLoading(false);
     }
@@ -46,7 +46,7 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
   if (!statistics) {
     return (
       <View style={styles.container}>
-        <Text style={styles.emptyText}>Não foi possível carregar as estatísticas</Text>
+        <Text style={styles.emptyText}>Could not load as Statistics</Text>
       </View>
     );
   }
@@ -54,15 +54,15 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Estatísticas</Text>
+        <Text style={styles.title}>Statistics</Text>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Medições Totais</Text>
+          <Text style={styles.cardTitle}>Total Measurements</Text>
           <Text style={styles.cardValue}>{statistics.totalMeasurements}</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>IMC (Índice de Massa Corporal)</Text>
+          <Text style={styles.cardTitle}>BMI (Body Mass Index)</Text>
           <Text style={styles.cardValue}>{statistics.imc}</Text>
           <Text style={styles.cardSubtitle}>{statistics.imcClassification}</Text>
         </View>
@@ -70,16 +70,16 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
         {statistics.totalMeasurements > 0 && (
           <>
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Pressão Arterial Média</Text>
+              <Text style={styles.cardTitle}>Average Blood Pressure</Text>
               <View style={styles.pressureContainer}>
                 <View style={styles.pressureItem}>
-                  <Text style={styles.pressureLabel}>Sistólica</Text>
+                  <Text style={styles.pressureLabel}>Systolic</Text>
                   <Text style={styles.pressureValue}>
                     {statistics.avgSystolic} mmHg
                   </Text>
                 </View>
                 <View style={styles.pressureItem}>
-                  <Text style={styles.pressureLabel}>Diastólica</Text>
+                  <Text style={styles.pressureLabel}>Diastolic</Text>
                   <Text style={styles.pressureValue}>
                     {statistics.avgDiastolic} mmHg
                   </Text>
@@ -88,7 +88,7 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
             </View>
 
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Frequência Cardíaca Média</Text>
+              <Text style={styles.cardTitle}>Heart Rate Média</Text>
               <Text style={styles.cardValue}>{statistics.avgHeartRate} BPM</Text>
             </View>
 
@@ -101,14 +101,14 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
                   ),
                 },
               ]}>
-              <Text style={styles.classificationTitle}>Classificação Geral</Text>
+              <Text style={styles.classificationTitle}>General Classification</Text>
               <Text style={styles.classificationValue}>
                 {statistics.classification}
               </Text>
             </View>
 
             <View style={styles.infoCard}>
-              <Text style={styles.infoTitle}>Sobre as Classificações</Text>
+              <Text style={styles.infoTitle}>About Classifications</Text>
               <Text style={styles.infoText}>
                 <Text style={styles.infoBold}>Hipotensão:</Text> {'<'}90/60 mmHg
               </Text>

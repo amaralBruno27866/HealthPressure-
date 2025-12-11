@@ -28,17 +28,17 @@ export interface Statistics {
 }
 
 export type BloodPressureClassification =
-  | 'Hipotensão'
+  | 'Hypotension'
   | 'Normal'
-  | 'Pré-Hipertensão'
-  | 'Hipertensão Estágio 1'
-  | 'Hipertensão Estágio 2'
-  | 'Crise Hipertensiva';
+  | 'Pre-Hypertension'
+  | 'Hypertension Stage 1'
+  | 'Hypertension Stage 2'
+  | 'Hypertensive Crisis';
 
 export type IMCClassification =
-  | 'Baixo peso'
-  | 'Peso normal'
-  | 'Sobrepeso'
-  | 'Obesidade Grau I'
-  | 'Obesidade Grau II'
-  | 'Obesidade Grau III';
+  | 'Underweight'
+  | 'Normal weight'
+  | 'Overweight'
+  | 'Obesity Class I'
+  | 'Obesity Class II'
+  | 'Obesity Class III';

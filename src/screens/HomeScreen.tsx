@@ -43,7 +43,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
       setMeasurements(measurementsData);
     } catch (error) {
       console.error('Error loading data:', error);
-      Alert.alert('Erro', 'Não foi possível carregar os dados');
+      Alert.alert('Error', 'Could not load data');
     }
   }, [userId]);
 
@@ -55,12 +55,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
 
   const handleDeleteMeasurement = (id: number) => {
     Alert.alert(
-      'Confirmar Exclusão',
-      'Deseja realmente excluir esta medição?',
+      'Confirm Deletion',
+      'Do you really want to delete this measurement?',
       [
-        {text: 'Cancelar', style: 'cancel'},
+        {text: 'Cancel', style: 'cancel'},
         {
-          text: 'Excluir',
+          text: 'Delete',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -68,7 +68,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
               loadData();
             } catch (error) {
               console.error('Error deleting measurement:', error);
-              Alert.alert('Erro', 'Não foi possível excluir a medição');
+              Alert.alert('Error', 'Could not delete measurement');
             }
           },
         },
@@ -89,7 +89,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
 
   const handleSaveUser = async () => {
     if (!formData.name || !formData.age || !formData.weight || !formData.height) {
-      Alert.alert('Erro', 'Preencha todos os campos');
+      Alert.alert('Error', 'Fill in all fields');
       return;
     }
 
@@ -104,31 +104,31 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
       
       setEditModalVisible(false);
       loadData();
-      Alert.alert('Sucesso', 'Dados atualizados com sucesso!');
+      Alert.alert('Success', 'Data updated successfully!');
     } catch (error) {
       console.error('Error updating user:', error);
-      Alert.alert('Erro', 'Não foi possível atualizar os dados');
+      Alert.alert('Error', 'Could not update data');
     }
   };
 
   const handleDeleteUser = () => {
     Alert.alert(
-      'Confirmar Exclusão',
-      `Deseja realmente excluir o usuário ${user?.name}? Todas as medições também serão excluídas.`,
+      'Confirm Deletion',
+      `Do you really want to delete user ${user?.name}? All measurements will also be deleted.`,
       [
-        {text: 'Cancelar', style: 'cancel'},
+        {text: 'Cancel', style: 'cancel'},
         {
-          text: 'Excluir',
+          text: 'Delete',
           style: 'destructive',
           onPress: async () => {
             try {
               await DatabaseService.deleteUser(userId);
-              Alert.alert('Sucesso', 'Usuário excluído!', [
+              Alert.alert('Success', 'User deleted!', [
                 {text: 'OK', onPress: () => navigation.navigate('UserSelection')},
               ]);
             } catch (error) {
               console.error('Error deleting user:', error);
-              Alert.alert('Erro', 'Não foi possível excluir o usuário');
+              Alert.alert('Error', 'Could not delete user');
             }
           },
         },
@@ -138,7 +138,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
 
   const handleShareReport = async () => {
     if (!user || measurements.length === 0) {
-      Alert.alert('Aviso', 'É necessário ter pelo menos uma medição para gerar o relatório');
+      Alert.alert('Warning', 'At least one measurement is required to generate the report');
       return;
     }
 
@@ -151,26 +151,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
       const timeStr = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
 
       let report = '═══════════════════════════════\n';
-      report += '   RELATÓRIO DE PRESSÃO ARTERIAL\n';
+      report += '   BLOOD PRESSURE REPORT\n';
       report += '═══════════════════════════════\n\n';
 
-      report += '👤 PACIENTE\n';
+      report += '👤 PATIENT\n';
       report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-      report += `Nome: ${user.name}\n`;
-      report += `Idade: ${user.age} anos\n`;
-      report += `Peso: ${user.weight} kg\n`;
-      report += `Altura: ${user.height} cm\n`;
-      report += `IMC: ${stats.imc.toFixed(1)} (${stats.imcClassification})\n\n`;
+      report += `Name: ${user.name}\n`;
+      report += `Age: ${user.age} years\n`;
+      report += `Weight: ${user.weight} kg\n`;
+      report += `Height: ${user.height} cm\n`;
+      report += `BMI: ${stats.imc.toFixed(1)} (${stats.imcClassification})\n\n`;
 
-      report += '📊 ESTATÍSTICAS GERAIS\n';
+      report += '📊 GENERAL STATISTICS\n';
       report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-      report += `Total de medições: ${stats.totalMeasurements}\n`;
-      report += `Pressão média: ${Math.round(stats.avgSystolic)}/${Math.round(stats.avgDiastolic)} mmHg\n`;
-      report += `Frequência cardíaca média: ${Math.round(stats.avgHeartRate)} BPM\n`;
-      report += `Classificação geral: ${stats.classification}\n\n`;
+      report += `Total measurements: ${stats.totalMeasurements}\n`;
+      report += `Average pressure: ${Math.round(stats.avgSystolic)}/${Math.round(stats.avgDiastolic)} mmHg\n`;
+      report += `Average heart rate: ${Math.round(stats.avgHeartRate)} BPM\n`;
+      report += `General classification: ${stats.classification}\n\n`;
 
       const recentMeasurements = measurements.slice(0, 10);
-      report += `📋 ÚLTIMAS ${recentMeasurements.length} MEDIÇÕES\n`;
+      report += `📋 LAST ${recentMeasurements.length} MEASUREMENTS\n`;
       report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
       
       recentMeasurements.forEach((m, index) => {
@@ -179,30 +179,30 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
         const dateFormatted = date.toLocaleDateString('pt-BR');
         const timeFormatted = date.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
         
-        report += `${index + 1}. ${dateFormatted} às ${timeFormatted}\n`;
+        report += `${index + 1}. ${dateFormatted} at ${timeFormatted}\n`;
         report += `   ${m.systolic}/${m.diastolic} mmHg - ${m.heartRate} BPM\n`;
         report += `   ${classification}\n`;
         if (m.notes) {
-          report += `   Obs: ${m.notes}\n`;
+          report += `   Note: ${m.notes}\n`;
         }
         report += '\n';
       });
 
       report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-      report += `Relatório gerado em: ${dateStr} às ${timeStr}\n`;
+      report += `Report generated on: ${dateStr} at ${timeStr}\n`;
       report += 'App: Health Pressure\n';
       report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-      report += '⚠️ IMPORTANTE: Este relatório é para fins\n';
-      report += 'de acompanhamento pessoal. Consulte sempre\n';
-      report += 'um profissional de saúde qualificado.\n';
+      report += '⚠️ IMPORTANT: This report is for\n';
+      report += 'personal monitoring purposes. Always\n';
+      report += 'consult a qualified healthcare professional.\n';
 
       await Share.share({
         message: report,
-        title: `Relatório de Pressão - ${user.name}`,
+        title: `Blood Pressure Report - ${user.name}`,
       });
     } catch (error) {
       console.error('Error sharing report:', error);
-      Alert.alert('Erro', 'Não foi possível compartilhar o relatório');
+      Alert.alert('Error', 'Could not share the report');
     }
   };
 
@@ -223,12 +223,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
 
         <View style={styles.measurementData}>
           <View style={styles.dataItem}>
-            <Text style={styles.dataLabel}>Sistólica</Text>
+            <Text style={styles.dataLabel}>Systolic</Text>
             <Text style={styles.dataValue}>{item.systolic} mmHg</Text>
           </View>
 
           <View style={styles.dataItem}>
-            <Text style={styles.dataLabel}>Diastólica</Text>
+            <Text style={styles.dataLabel}>Diastolic</Text>
             <Text style={styles.dataValue}>{item.diastolic} mmHg</Text>
           </View>
 
@@ -239,7 +239,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
         </View>
 
         {item.notes && (
-          <Text style={styles.notes}>Obs: {item.notes}</Text>
+          <Text style={styles.notes}>Note: {item.notes}</Text>
         )}
       </TouchableOpacity>
     );
@@ -249,7 +249,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
     <View style={styles.container}>
       <SafeAreaView style={styles.headerSafeArea} edges={['top']}>
         <View style={styles.header}>
-          <Text style={styles.welcomeText}>Olá, {user?.name}!</Text>
+          <Text style={styles.welcomeText}>Hello, {user?.name}!</Text>
           
           <View style={styles.headerActions}>
             <TouchableOpacity
@@ -286,7 +286,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
           <Text style={styles.emptyText}>
-            Nenhuma medição registrada. Adicione sua primeira medição!
+            No measurement recorded. Add your first measurement!
           </Text>
         }
       />
@@ -294,7 +294,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate('AddMeasurement', {userId})}>
-        <Text style={styles.addButtonText}>+ Nova Medição</Text>
+        <Text style={styles.addButtonText}>+ New Measurement</Text>
       </TouchableOpacity>
 
       <Modal
@@ -304,19 +304,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
         onRequestClose={() => setEditModalVisible(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Editar Perfil</Text>
+            <Text style={styles.modalTitle}>Edit Profile</Text>
             
             <ScrollView>
               <TextInput
                 style={styles.input}
-                placeholder="Nome"
+                placeholder="Name"
                 value={formData.name}
                 onChangeText={text => setFormData({...formData, name: text})}
               />
 
               <TextInput
                 style={styles.input}
-                placeholder="Idade"
+                placeholder="Age"
                 keyboardType="numeric"
                 value={formData.age}
                 onChangeText={text => setFormData({...formData, age: text})}
@@ -324,7 +324,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
 
               <TextInput
                 style={styles.input}
-                placeholder="Peso (kg)"
+                placeholder="Weight (kg)"
                 keyboardType="decimal-pad"
                 value={formData.weight}
                 onChangeText={text => setFormData({...formData, weight: text})}
@@ -332,7 +332,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
 
               <TextInput
                 style={styles.input}
-                placeholder="Altura (cm)"
+                placeholder="Height (cm)"
                 keyboardType="numeric"
                 value={formData.height}
                 onChangeText={text => setFormData({...formData, height: text})}
@@ -342,13 +342,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
                 <TouchableOpacity
                   style={[styles.modalButton, styles.cancelButton]}
                   onPress={() => setEditModalVisible(false)}>
-                  <Text style={styles.buttonText}>Cancelar</Text>
+                  <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   style={[styles.modalButton, styles.saveButton]}
                   onPress={handleSaveUser}>
-                  <Text style={styles.buttonText}>Salvar</Text>
+                  <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>

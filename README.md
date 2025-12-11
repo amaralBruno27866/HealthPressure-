@@ -1,53 +1,60 @@
-# Health Pressure - App de Controle de Pressão Arterial
+# Health Pressure - Blood Pressure Monitoring App
 
-Aplicativo React Native para monitoramento de pressão arterial com múltiplos usuários.
+React Native app for monitoring blood pressure with multiple users.
 
-## 🎯 Funcionalidades
+## 🎯 Features
 
-- ✅ **Gerenciamento de Usuários**: Adicionar e selecionar múltiplos usuários
-- ✅ **Registro de Medições**: Armazenar pressão sistólica, diastólica e BPM
-- ✅ **Classificação OMS**: Classificação automática da pressão arterial
-- ✅ **Estatísticas**: Cálculo de IMC, médias e análises
-- ✅ **Banco de Dados Local**: SQLite para armazenamento persistente
+- ✅ **User Management**: Add and select multiple users
+- ✅ **Measurement Recording**: Store systolic, diastolic pressure and BPM
+- ✅ **WHO Classification**: Automatic blood pressure classification
+- ✅ **Statistics**: BMI calculation, averages and analysis
+- ✅ **Local Database**: SQLite for persistent storage
+- ✅ **Share Reports**: Generate and share detailed health reports
 
-## 📱 Classificação da Pressão Arterial (OMS/AHA)
+## 📱 Blood Pressure Classification (WHO/AHA)
 
-- **Hipotensão**: <90/60 mmHg
+- **Hypotension**: <90/60 mmHg
 - **Normal**: <120/80 mmHg
-- **Pré-Hipertensão**: 120-129/80-84 mmHg
-- **Hipertensão Estágio 1**: 130-139/85-89 mmHg
-- **Hipertensão Estágio 2**: 140-179/90-119 mmHg
-- **Crise Hipertensiva**: >180/120 mmHg
+- **Pre-Hypertension**: 120-129/80-84 mmHg
+- **Hypertension Stage 1**: 130-139/85-89 mmHg
+- **Hypertension Stage 2**: 140-179/90-119 mmHg
+- **Hypertensive Crisis**: >180/120 mmHg
 
-## 🚀 Como Executar
+## 🚀 How to Run
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js instalado
-- Android Studio (para emulador Android) ou dispositivo físico
-- React Native CLI configurado
+- Node.js installed
+- Android Studio (for Android emulator) or physical device
+- React Native CLI configured
 
-### Instalação
+### Installation
 
 ```bash
-# As dependências já foram instaladas durante a criação do projeto
-# Caso precise reinstalar:
+# Dependencies were already installed during project creation
+# If you need to reinstall:
 npm install
 ```
 
-### Executar no Android
+### Run on Android
 
 ```bash
-# Iniciar o Metro Bundler
+# Start Metro Bundler
 npm start
 
-# Em outro terminal, executar no Android
+# In another terminal, run on Android
 npm run android
 ```
 
-### Executar no iOS (apenas macOS)
+### Run on iOS (macOS only)
 
 ```bash
+# Install iOS dependencies
+cd ios && pod install && cd ..
+
+# Run on iOS
+npm run ios
+```
 cd ios
 pod install
 cd ..
