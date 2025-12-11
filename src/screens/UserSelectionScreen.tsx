@@ -35,8 +35,8 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
     try {
       const allUsers = await DatabaseService.getAllUsers();
       setUsers(allUsers);
-    } catch (Errorr) {
-      console.Errorr('Errorr loading users:', Errorr);
+    } catch (error) {
+      console.error('Error loading users:', error);
       Alert.alert('Error', 'Could not load users');
     }
   };
@@ -57,25 +57,25 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
           weight: parseFloat(formData.weight),
           height: parseFloat(formData.height),
         });
-        Alert.alert('Success', 'Usuário atualizado com Success!');
+        Alert.alert('Success', 'User updated successfully!');
       } else {
-        // Adicionar novuser
+        // Add new user
         await DatabaseService.addUser({
           name: formData.name,
           age: parseInt(formData.age, 10),
           weight: parseFloat(formData.weight),
           height: parseFloat(formData.height),
         });
-        Alert.alert('Success', 'Usuário adicionado com Success!');
+        Alert.alert('Success', 'User added successfully!');
       }
 
       setModalVisible(false);
       setFormData({name: '', age: '', weight: '', height: ''});
       setEditingUser(null);
       loadUsers();
-    } catch (Errorr) {
-      console.Errorr('Errorr saving user:', Errorr);
-      Alert.alert('Error', 'Não foi possível Save user');
+    } catch (error) {
+      console.error('Error saving user:', error);
+      Alert.alert('Error', 'Could not save user');
     }
   };
 
@@ -103,9 +103,9 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
             try {
               await DatabaseService.deleteUser(user.id!);
               loadUsers();
-              Alert.alert('Success', 'Usuário excluído com Success!');
-            } catch (Errorr) {
-              console.Errorr('Errorr deleting user:', Errorr);
+              Alert.alert('Success', 'User deleted successfully!');
+            } catch (error) {
+              console.error('Error deleting user:', error);
               Alert.alert('Error', 'Could not delete user');
             }
           },
@@ -137,7 +137,7 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Selecione user</Text>
+      <Text style={styles.title}>Select User</Text>
 
       <FlatList
         data={users}
@@ -168,7 +168,7 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
-              {editingUser ? 'Edit User' : 'Novuser'}
+              {editingUser ? 'Edit User' : 'New User'}
             </Text>
 
             <TextInput
@@ -216,7 +216,7 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
                 style={[styles.modalButton, styles.saveButton]}
                 onPress={handleAddUser}>
                 <Text style={styles.buttonText}>
-                  {editingUser ? 'Atualizar' : 'Save'}
+                  {editingUser ? 'Update' : 'Save'}
                 </Text>
               </TouchableOpacity>
             </View>

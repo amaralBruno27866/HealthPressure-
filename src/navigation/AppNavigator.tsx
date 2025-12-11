@@ -25,7 +25,7 @@ const MainTabs = ({route}: any) => {
         component={HomeScreen}
         initialParams={{userId}}
         options={{
-          tabBarLabel: 'Medições',
+          tabBarLabel: 'Measurements',
           tabBarIcon: () => null,
         }}
       />
@@ -74,7 +74,7 @@ const AppNavigator = () => {
           name="AddMeasurement"
           component={AddMeasurementScreen}
           options={{
-            title: 'Novmeasurement',
+            title: 'New Measurement',
             presentation: 'modal',
           }}
         />

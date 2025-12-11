@@ -34,7 +34,7 @@ const AddMeasurementScreen: React.FC<AddMeasurementScreenProps> = ({
 
   const handleSave = async () => {
     if (!systolic || !diastolic || !heartRate) {
-      Alert.alert('Error', 'Fill in all fields obrigatórios');
+      Alert.alert('Error', 'Fill in all required fields');
       return;
     }
 
@@ -64,7 +64,7 @@ const AddMeasurementScreen: React.FC<AddMeasurementScreenProps> = ({
         notes: notes || undefined,
       });
 
-      Alert.alert('Success', 'Medição registrada com Success!', [
+      Alert.alert('Success', 'Measurement recorded successfully!', [
         {text: 'OK', onPress: () => navigation.goBack()},
       ]);
     } catch (error) {
@@ -77,10 +77,10 @@ const AddMeasurementScreen: React.FC<AddMeasurementScreenProps> = ({
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Novmeasurement</Text>
+          <Text style={styles.title}>New Measurement</Text>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Pressão Systolic (mmHg) *</Text>
+          <Text style={styles.label}>Systolic Pressure (mmHg) *</Text>
           <TextInput
             style={styles.input}
             placeholder="120"
@@ -126,7 +126,7 @@ const AddMeasurementScreen: React.FC<AddMeasurementScreenProps> = ({
           <Text style={styles.label}>Notes (optional)</Text>
           <TextInput
             style={[styles.input, styles.textArea]}
-            placeholder="Ex: Medição após exercício"
+            placeholder="Ex: Measurement after exercise"
             multiline
             numberOfLines={4}
             value={notes}
@@ -135,7 +135,7 @@ const AddMeasurementScreen: React.FC<AddMeasurementScreenProps> = ({
         </View>
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>Save Medição</Text>
+          <Text style={styles.saveButtonText}>Save Measurement</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

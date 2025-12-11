@@ -24,8 +24,8 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
       setLoading(true);
       const stats = await DatabaseService.getStatistics(userId);
       setStatistics(stats);
-    } catch (Errorr) {
-      console.Errorr('Errorr loading statistics:', Errorr);
+    } catch (error) {
+      console.error('Error loading statistics:', error);
     } finally {
       setLoading(false);
     }
@@ -46,7 +46,7 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
   if (!statistics) {
     return (
       <View style={styles.container}>
-        <Text style={styles.emptyText}>Could not load as Statistics</Text>
+        <Text style={styles.emptyText}>Could not load statistics</Text>
       </View>
     );
   }
@@ -88,7 +88,7 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
             </View>
 
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Heart Rate Média</Text>
+              <Text style={styles.cardTitle}>Average Heart Rate</Text>
               <Text style={styles.cardValue}>{statistics.avgHeartRate} BPM</Text>
             </View>
 
@@ -110,22 +110,22 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
             <View style={styles.infoCard}>
               <Text style={styles.infoTitle}>About Classifications</Text>
               <Text style={styles.infoText}>
-                <Text style={styles.infoBold}>Hipotensão:</Text> {'<'}90/60 mmHg
+                <Text style={styles.infoBold}>Hypotension:</Text> {'<'}90/60 mmHg
               </Text>
               <Text style={styles.infoText}>
                 <Text style={styles.infoBold}>Normal:</Text> {'<'}120/80 mmHg
               </Text>
               <Text style={styles.infoText}>
-                <Text style={styles.infoBold}>Pré-Hipertensão:</Text> 120-129/80-84 mmHg
+                <Text style={styles.infoBold}>Pre-Hypertension:</Text> 120-129/80-84 mmHg
               </Text>
               <Text style={styles.infoText}>
-                <Text style={styles.infoBold}>Hipertensão Estágio 1:</Text> 130-139/85-89 mmHg
+                <Text style={styles.infoBold}>Hypertension Stage 1:</Text> 130-139/85-89 mmHg
               </Text>
               <Text style={styles.infoText}>
-                <Text style={styles.infoBold}>Hipertensão Estágio 2:</Text> 140-179/90-119 mmHg
+                <Text style={styles.infoBold}>Hypertension Stage 2:</Text> 140-179/90-119 mmHg
               </Text>
               <Text style={styles.infoText}>
-                <Text style={styles.infoBold}>Crise Hipertensiva:</Text> {'>'}180/120 mmHg
+                <Text style={styles.infoBold}>Hypertensive Crisis:</Text> {'>'}180/120 mmHg
               </Text>
             </View>
           </>
