@@ -19,7 +19,8 @@ interface UserSelectionScreenProps {
 const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) => {
   const [users, setUsers] = useState<User[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [newUser, setNewUser] = useState({
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [formData, setFormData] = useState({
     name: '',
     age: '',
     weight: '',
@@ -41,27 +42,86 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
   };
 
   const handleAddUser = async () => {
-    if (!newUser.name || !newUser.age || !newUser.weight || !newUser.height) {
+    if (!formData.name || !formData.age || !formData.weight || !formData.height) {
       Alert.alert('Erro', 'Preencha todos os campos');
       return;
     }
 
     try {
-      await DatabaseService.addUser({
-        name: newUser.name,
-        age: parseInt(newUser.age, 10),
-        weight: parseFloat(newUser.weight),
-        height: parseFloat(newUser.height),
-      });
+      if (editingUser) {
+        // Atualizar usuário existente
+        await DatabaseService.updateUser({
+          id: editingUser.id,
+          name: formData.name,
+          age: parseInt(formData.age, 10),
+          weight: parseFloat(formData.weight),
+          height: parseFloat(formData.height),
+        });
+        Alert.alert('Sucesso', 'Usuário atualizado com sucesso!');
+      } else {
+        // Adicionar novo usuário
+        await DatabaseService.addUser({
+          name: formData.name,
+          age: parseInt(formData.age, 10),
+          weight: parseFloat(formData.weight),
+          height: parseFloat(formData.height),
+        });
+        Alert.alert('Sucesso', 'Usuário adicionado com sucesso!');
+      }
 
       setModalVisible(false);
-      setNewUser({name: '', age: '', weight: '', height: ''});
+      setFormData({name: '', age: '', weight: '', height: ''});
+      setEditingUser(null);
       loadUsers();
-      Alert.alert('Sucesso', 'Usuário adicionado com sucesso!');
     } catch (error) {
-      console.error('Error adding user:', error);
-      Alert.alert('Erro', 'Não foi possível adicionar o usuário');
+      console.error('Error saving user:', error);
+      Alert.alert('Erro', 'Não foi possível salvar o usuário');
     }
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setFormData({
+      name: user.name,
+      age: user.age.toString(),
+      weight: user.weight.toString(),
+      height: user.height.toString(),
+    });
+    setModalVisible(true);
+  };
+
+  const handleDeleteUser = (user: User) => {
+    Alert.alert(
+      'Confirmar Exclusão',
+      `Deseja realmente excluir o usuário ${user.name}? Todas as medições associadas também serão excluídas.`,
+      [
+        {text: 'Cancelar', style: 'cancel'},
+        {
+          text: 'Excluir',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await DatabaseService.deleteUser(user.id!);
+              loadUsers();
+              Alert.alert('Sucesso', 'Usuário excluído com sucesso!');
+            } catch (error) {
+              console.error('Error deleting user:', error);
+              Alert.alert('Erro', 'Não foi possível excluir o usuário');
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleOpenAddModal = () => {
+    setEditingUser(null);
+    setFormData({name: '', age: '', weight: '', height: ''});
+    setModalVisible(true);
+  };
+
+  const handleSelectUser = (user: User) => {
+    navigation.navigate('MainTabs', {userId: user.id});
   };
 
   const handleSelectUser = (user: User) => {
@@ -97,7 +157,7 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => setModalVisible(true)}>
+        onPress={handleOpenAddModal}>
         <Text style={styles.addButtonText}>+ Adicionar Usuário</Text>
       </TouchableOpacity>
 
@@ -105,53 +165,63 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
         visible={modalVisible}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setModalVisible(false)}>
+        onRequestClose={() => {
+          setModalVisible(false);
+          setEditingUser(null);
+        }}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Novo Usuário</Text>
+            <Text style={styles.modalTitle}>
+              {editingUser ? 'Editar Usuário' : 'Novo Usuário'}
+            </Text>
 
             <TextInput
               style={styles.input}
               placeholder="Nome"
-              value={newUser.name}
-              onChangeText={text => setNewUser({...newUser, name: text})}
+              value={formData.name}
+              onChangeText={text => setFormData({...formData, name: text})}
             />
 
             <TextInput
               style={styles.input}
               placeholder="Idade"
               keyboardType="numeric"
-              value={newUser.age}
-              onChangeText={text => setNewUser({...newUser, age: text})}
+              value={formData.age}
+              onChangeText={text => setFormData({...formData, age: text})}
             />
 
             <TextInput
               style={styles.input}
               placeholder="Peso (kg)"
               keyboardType="decimal-pad"
-              value={newUser.weight}
-              onChangeText={text => setNewUser({...newUser, weight: text})}
+              value={formData.weight}
+              onChangeText={text => setFormData({...formData, weight: text})}
             />
 
             <TextInput
               style={styles.input}
               placeholder="Altura (cm)"
               keyboardType="numeric"
-              value={newUser.height}
-              onChangeText={text => setNewUser({...newUser, height: text})}
+              value={formData.height}
+              onChangeText={text => setFormData({...formData, height: text})}
             />
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setModalVisible(false)}>
+                onPress={() => {
+                  setModalVisible(false);
+                  setEditingUser(null);
+                }}>
                 <Text style={styles.buttonText}>Cancelar</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={[styles.modalButton, styles.saveButton]}
                 onPress={handleAddUser}>
-                <Text style={styles.buttonText}>Salvar</Text>
+                <Text style={styles.buttonText}>
+                  {editingUser ? 'Atualizar' : 'Salvar'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

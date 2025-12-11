@@ -6,7 +6,11 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  Modal,
+  TextInput,
+  ScrollView,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import DatabaseService from '../services/DatabaseService';
 import {Measurement, User} from '../models';
@@ -21,6 +25,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
   const {userId} = route.params;
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    age: '',
+    weight: '',
+    height: '',
+  });
 
   const loadData = useCallback(async () => {
     try {
@@ -56,6 +67,66 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
             } catch (error) {
               console.error('Error deleting measurement:', error);
               Alert.alert('Erro', 'Não foi possível excluir a medição');
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleEditUser = () => {
+    if (!user) return;
+    setFormData({
+      name: user.name,
+      age: user.age.toString(),
+      weight: user.weight.toString(),
+      height: user.height.toString(),
+    });
+    setEditModalVisible(true);
+  };
+
+  const handleSaveUser = async () => {
+    if (!formData.name || !formData.age || !formData.weight || !formData.height) {
+      Alert.alert('Erro', 'Preencha todos os campos');
+      return;
+    }
+
+    try {
+      await DatabaseService.updateUser({
+        id: userId,
+        name: formData.name,
+        age: parseInt(formData.age, 10),
+        weight: parseFloat(formData.weight),
+        height: parseFloat(formData.height),
+      });
+      
+      setEditModalVisible(false);
+      loadData();
+      Alert.alert('Sucesso', 'Dados atualizados com sucesso!');
+    } catch (error) {
+      console.error('Error updating user:', error);
+      Alert.alert('Erro', 'Não foi possível atualizar os dados');
+    }
+  };
+
+  const handleDeleteUser = () => {
+    Alert.alert(
+      'Confirmar Exclusão',
+      `Deseja realmente excluir o usuário ${user?.name}? Todas as medições também serão excluídas.`,
+      [
+        {text: 'Cancelar', style: 'cancel'},
+        {
+          text: 'Excluir',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await DatabaseService.deleteUser(userId);
+              Alert.alert('Sucesso', 'Usuário excluído!', [
+                {text: 'OK', onPress: () => navigation.navigate('UserSelection')},
+              ]);
+            } catch (error) {
+              console.error('Error deleting user:', error);
+              Alert.alert('Erro', 'Não foi possível excluir o usuário');
             }
           },
         },
@@ -104,13 +175,31 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.welcomeText}>Olá, {user?.name}!</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('UserSelection')}>
-          <Text style={styles.changeUserText}>Trocar usuário</Text>
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView style={styles.headerSafeArea} edges={['top']}>
+        <View style={styles.header}>
+          <Text style={styles.welcomeText}>Olá, {user?.name}!</Text>
+          
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={handleEditUser}>
+              <Text style={styles.headerIcon}>✏️</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={handleDeleteUser}>
+              <Text style={styles.headerIcon}>🗑️</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={() => navigation.navigate('UserSelection')}>
+              <Text style={styles.headerIcon}>👤</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
 
       <FlatList
         data={measurements}
@@ -126,9 +215,68 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('AddMeasurement')}>
+        onPress={() => navigation.navigate('AddMeasurement', {userId})}>
         <Text style={styles.addButtonText}>+ Nova Medição</Text>
       </TouchableOpacity>
+
+      <Modal
+        visible={editModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setEditModalVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Editar Perfil</Text>
+            
+            <ScrollView>
+              <TextInput
+                style={styles.input}
+                placeholder="Nome"
+                value={formData.name}
+                onChangeText={text => setFormData({...formData, name: text})}
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder="Idade"
+                keyboardType="numeric"
+                value={formData.age}
+                onChangeText={text => setFormData({...formData, age: text})}
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder="Peso (kg)"
+                keyboardType="decimal-pad"
+                value={formData.weight}
+                onChangeText={text => setFormData({...formData, weight: text})}
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder="Altura (cm)"
+                keyboardType="numeric"
+                value={formData.height}
+                onChangeText={text => setFormData({...formData, height: text})}
+              />
+
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setEditModalVisible(false)}>
+                  <Text style={styles.buttonText}>Cancelar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.saveButton]}
+                  onPress={handleSaveUser}>
+                  <Text style={styles.buttonText}>Salvar</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -137,6 +285,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  headerSafeArea: {
+    backgroundColor: '#3498db',
   },
   header: {
     backgroundColor: '#3498db',
@@ -150,11 +301,22 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
+    flex: 1,
   },
-  changeUserText: {
-    fontSize: 14,
-    color: '#fff',
-    textDecorationLine: 'underline',
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  headerButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerIcon: {
+    fontSize: 20,
   },
   listContainer: {
     padding: 16,
@@ -239,6 +401,57 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#fff',
     fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    width: '85%',
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    fontSize: 16,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  modalButton: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: '#95a5a6',
+  },
+  saveButton: {
+    backgroundColor: '#2ecc71',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

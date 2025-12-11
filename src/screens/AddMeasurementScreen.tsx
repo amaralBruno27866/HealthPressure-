@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import DatabaseService from '../services/DatabaseService';
 import {classifyBloodPressure, getColorForClassification} from '../utils/calculations';
 
@@ -73,9 +74,10 @@ const AddMeasurementScreen: React.FC<AddMeasurementScreenProps> = ({
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Nova Medição</Text>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <ScrollView style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Nova Medição</Text>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Pressão Sistólica (mmHg) *</Text>
@@ -143,10 +145,15 @@ const AddMeasurementScreen: React.FC<AddMeasurementScreenProps> = ({
         </TouchableOpacity>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
