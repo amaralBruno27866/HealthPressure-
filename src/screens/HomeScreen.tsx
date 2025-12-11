@@ -9,9 +9,11 @@ import {
   Modal,
   TextInput,
   ScrollView,
+  Share,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import DatabaseService from '../services/DatabaseService';
 import {Measurement, User} from '../models';
 import {formatDate, classifyBloodPressure, getColorForClassification} from '../utils/calculations';
@@ -134,6 +136,76 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
     );
   };
 
+  const handleShareReport = async () => {
+    if (!user || measurements.length === 0) {
+      Alert.alert('Aviso', 'É necessário ter pelo menos uma medição para gerar o relatório');
+      return;
+    }
+
+    try {
+      const stats = await DatabaseService.getStatistics(userId);
+      if (!stats) return;
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('pt-BR');
+      const timeStr = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
+
+      let report = '═══════════════════════════════\n';
+      report += '   RELATÓRIO DE PRESSÃO ARTERIAL\n';
+      report += '═══════════════════════════════\n\n';
+
+      report += '👤 PACIENTE\n';
+      report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      report += `Nome: ${user.name}\n`;
+      report += `Idade: ${user.age} anos\n`;
+      report += `Peso: ${user.weight} kg\n`;
+      report += `Altura: ${user.height} cm\n`;
+      report += `IMC: ${stats.imc.toFixed(1)} (${stats.imcClassification})\n\n`;
+
+      report += '📊 ESTATÍSTICAS GERAIS\n';
+      report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      report += `Total de medições: ${stats.totalMeasurements}\n`;
+      report += `Pressão média: ${Math.round(stats.avgSystolic)}/${Math.round(stats.avgDiastolic)} mmHg\n`;
+      report += `Frequência cardíaca média: ${Math.round(stats.avgHeartRate)} BPM\n`;
+      report += `Classificação geral: ${stats.classification}\n\n`;
+
+      const recentMeasurements = measurements.slice(0, 10);
+      report += `📋 ÚLTIMAS ${recentMeasurements.length} MEDIÇÕES\n`;
+      report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      
+      recentMeasurements.forEach((m, index) => {
+        const classification = classifyBloodPressure(m.systolic, m.diastolic);
+        const date = new Date(m.date);
+        const dateFormatted = date.toLocaleDateString('pt-BR');
+        const timeFormatted = date.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
+        
+        report += `${index + 1}. ${dateFormatted} às ${timeFormatted}\n`;
+        report += `   ${m.systolic}/${m.diastolic} mmHg - ${m.heartRate} BPM\n`;
+        report += `   ${classification}\n`;
+        if (m.notes) {
+          report += `   Obs: ${m.notes}\n`;
+        }
+        report += '\n';
+      });
+
+      report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      report += `Relatório gerado em: ${dateStr} às ${timeStr}\n`;
+      report += 'App: Health Pressure\n';
+      report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+      report += '⚠️ IMPORTANTE: Este relatório é para fins\n';
+      report += 'de acompanhamento pessoal. Consulte sempre\n';
+      report += 'um profissional de saúde qualificado.\n';
+
+      await Share.share({
+        message: report,
+        title: `Relatório de Pressão - ${user.name}`,
+      });
+    } catch (error) {
+      console.error('Error sharing report:', error);
+      Alert.alert('Erro', 'Não foi possível compartilhar o relatório');
+    }
+  };
+
   const renderMeasurement = ({item}: {item: Measurement}) => {
     const classification = classifyBloodPressure(item.systolic, item.diastolic);
     const color = getColorForClassification(classification);
@@ -182,20 +254,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
           <View style={styles.headerActions}>
             <TouchableOpacity
               style={styles.headerButton}
+              onPress={handleShareReport}>
+              <Icon name="share" size={22} color="#fff" />
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.headerButton}
               onPress={handleEditUser}>
-              <Text style={styles.headerIcon}>✏️</Text>
+              <Icon name="edit" size={22} color="#fff" />
             </TouchableOpacity>
             
             <TouchableOpacity
               style={styles.headerButton}
               onPress={handleDeleteUser}>
-              <Text style={styles.headerIcon}>🗑️</Text>
+              <Icon name="delete" size={22} color="#fff" />
             </TouchableOpacity>
             
             <TouchableOpacity
               style={styles.headerButton}
               onPress={() => navigation.navigate('UserSelection')}>
-              <Text style={styles.headerIcon}>👤</Text>
+              <Icon name="people" size={22} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -314,9 +392,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  headerIcon: {
-    fontSize: 20,
   },
   listContainer: {
     padding: 16,

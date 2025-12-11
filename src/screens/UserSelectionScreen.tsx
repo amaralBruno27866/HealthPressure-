@@ -124,10 +124,6 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
     navigation.navigate('MainTabs', {userId: user.id});
   };
 
-  const handleSelectUser = (user: User) => {
-    navigation.navigate('MainTabs', {userId: user.id});
-  };
-
   const renderUser = ({item}: {item: User}) => (
     <TouchableOpacity
       style={styles.userCard}

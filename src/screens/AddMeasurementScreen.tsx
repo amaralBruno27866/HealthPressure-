@@ -143,8 +143,8 @@ const AddMeasurementScreen: React.FC<AddMeasurementScreenProps> = ({
           onPress={() => navigation.goBack()}>
           <Text style={styles.cancelButtonText}>Cancelar</Text>
         </TouchableOpacity>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
