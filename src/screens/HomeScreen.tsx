@@ -147,8 +147,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
       if (!stats) return;
 
       const now = new Date();
-      const dateStr = now.toLocaleDateString('pt-BR');
-      const timeStr = now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
+      const dateStr = now.toLocaleDateString('en-US');
+      const timeStr = now.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'});
 
       let report = '═══════════════════════════════\n';
       report += '   BLOOD PRESSURE REPORT\n';
@@ -176,8 +176,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
       recentMeasurements.forEach((m, index) => {
         const classification = classifyBloodPressure(m.systolic, m.diastolic);
         const date = new Date(m.date);
-        const dateFormatted = date.toLocaleDateString('pt-BR');
-        const timeFormatted = date.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
+        const dateFormatted = date.toLocaleDateString('en-US');
+        const timeFormatted = date.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'});
         
         report += `${index + 1}. ${dateFormatted} at ${timeFormatted}\n`;
         report += `   ${m.systolic}/${m.diastolic} mmHg - ${m.heartRate} BPM\n`;
