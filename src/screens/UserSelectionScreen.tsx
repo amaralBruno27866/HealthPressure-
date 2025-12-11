@@ -79,41 +79,6 @@ const UserSelectionScreen: React.FC<UserSelectionScreenProps> = ({navigation}) =
     }
   };
 
-  const handleEditUser = (user: User) => {
-    setEditingUser(user);
-    setFormData({
-      name: user.name,
-      age: user.age.toString(),
-      weight: user.weight.toString(),
-      height: user.height.toString(),
-    });
-    setModalVisible(true);
-  };
-
-  const handleDeleteUser = (user: User) => {
-    Alert.alert(
-      'Confirm Deletion',
-      `Do you really want to delete user ${user.name}? All associated measurements will also be deleted.`,
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await DatabaseService.deleteUser(user.id!);
-              loadUsers();
-              Alert.alert('Success', 'User deleted successfully!');
-            } catch (error) {
-              console.error('Error deleting user:', error);
-              Alert.alert('Error', 'Could not delete user');
-            }
-          },
-        },
-      ],
-    );
-  };
-
   const handleOpenAddModal = () => {
     setEditingUser(null);
     setFormData({name: '', age: '', weight: '', height: ''});
