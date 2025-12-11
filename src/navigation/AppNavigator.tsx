@@ -2,6 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import SplashScreen from '../screens/SplashScreen';
 import UserSelectionScreen from '../screens/UserSelectionScreen';
 import HomeScreen from '../screens/HomeScreen';
 import AddMeasurementScreen from '../screens/AddMeasurementScreen';
@@ -65,6 +66,13 @@ const AppNavigator = () => {
             fontWeight: 'bold',
           },
         }}>
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen
           name="UserSelection"
           component={UserSelectionScreen}
