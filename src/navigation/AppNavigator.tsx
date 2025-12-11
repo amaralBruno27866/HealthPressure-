@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import SplashScreen from '../screens/SplashScreen';
 import UserSelectionScreen from '../screens/UserSelectionScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -10,17 +10,43 @@ import StatisticsScreen from '../screens/StatisticsScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 const MainTabs = ({route}: any) => {
   const {userId} = route.params;
 
   return (
     <Tab.Navigator
+      tabBarPosition="bottom"
       screenOptions={{
         tabBarActiveTintColor: '#3498db',
         tabBarInactiveTintColor: '#95a5a6',
-        headerShown: false,
+        tabBarLabelStyle: {
+          fontSize: 13,
+          fontWeight: '600',
+          textTransform: 'none',
+        },
+        tabBarStyle: {
+          backgroundColor: '#fff',
+          borderTopWidth: 1,
+          borderTopColor: '#e0e0e0',
+          elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: {width: 0, height: -2},
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          height: 60,
+        },
+        tabBarIndicatorStyle: {
+          backgroundColor: '#3498db',
+          height: 3,
+          top: 0,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 8,
+        },
+        tabBarPressColor: '#e8f4fd',
+        swipeEnabled: true,
       }}>
       <Tab.Screen
         name="Home"
@@ -28,7 +54,6 @@ const MainTabs = ({route}: any) => {
         initialParams={{userId}}
         options={{
           tabBarLabel: 'Measurements',
-          tabBarIcon: () => null,
         }}
       />
       <Tab.Screen
@@ -37,7 +62,6 @@ const MainTabs = ({route}: any) => {
         initialParams={{userId}}
         options={{
           tabBarLabel: 'Statistics',
-          tabBarIcon: () => null,
         }}
       />
       <Tab.Screen
@@ -46,7 +70,6 @@ const MainTabs = ({route}: any) => {
         initialParams={{userId}}
         options={{
           tabBarLabel: 'History',
-          tabBarIcon: () => null,
         }}
       />
     </Tab.Navigator>

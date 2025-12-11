@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import DatabaseService from '../services/DatabaseService';
 import {Statistics} from '../models';
 import {getColorForClassification} from '../utils/calculations';
@@ -37,8 +38,15 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#3498db" />
+      <View style={styles.container}>
+        <SafeAreaView style={styles.headerSafeArea} edges={['top']}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Statistics</Text>
+          </View>
+        </SafeAreaView>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#3498db" />
+        </View>
       </View>
     );
   }
@@ -46,15 +54,28 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
   if (!statistics) {
     return (
       <View style={styles.container}>
-        <Text style={styles.emptyText}>Could not load statistics</Text>
+        <SafeAreaView style={styles.headerSafeArea} edges={['top']}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Statistics</Text>
+          </View>
+        </SafeAreaView>
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Could not load statistics</Text>
+        </View>
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Statistics</Text>
+    <View style={styles.container}>
+      <SafeAreaView style={styles.headerSafeArea} edges={['top']}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Statistics</Text>
+        </View>
+      </SafeAreaView>
+      
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.content}>
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Total Measurements</Text>
@@ -63,7 +84,7 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>BMI (Body Mass Index)</Text>
-          <Text style={styles.cardValue}>{statistics.imc}</Text>
+          <Text style={styles.cardValue}>{statistics.imc.toFixed(2)}</Text>
           <Text style={styles.cardSubtitle}>{statistics.imcClassification}</Text>
         </View>
 
@@ -130,8 +151,9 @@ const StatisticsScreen: React.FC<StatisticsScreenProps> = ({route}) => {
             </View>
           </>
         )}
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -140,10 +162,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+  headerSafeArea: {
+    backgroundColor: '#3498db',
+  },
+  header: {
+    backgroundColor: '#3498db',
+    padding: 20,
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  scrollView: {
+    flex: 1,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
   },
   content: {
     padding: 20,
@@ -235,12 +284,6 @@ const styles = StyleSheet.create({
   },
   infoBold: {
     fontWeight: 'bold',
-  },
-  emptyText: {
-    textAlign: 'center',
-    color: '#999',
-    fontSize: 16,
-    marginTop: 40,
   },
 });
 

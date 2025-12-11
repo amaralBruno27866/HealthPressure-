@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -16,7 +15,6 @@ import {formatDate, classifyBloodPressure, getColorForClassification} from '../u
 
 interface HistoryScreenProps {
   route: any;
-  navigation: any;
 }
 
 interface WeekGroup {
@@ -25,7 +23,7 @@ interface WeekGroup {
   measurements: Measurement[];
 }
 
-const HistoryScreen: React.FC<HistoryScreenProps> = ({route, navigation}) => {
+const HistoryScreen: React.FC<HistoryScreenProps> = ({route}) => {
   const {userId} = route.params;
   const [loading, setLoading] = useState(true);
   const [groupedData, setGroupedData] = useState<WeekGroup[]>([]);
@@ -171,30 +169,26 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({route, navigation}) => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>History</Text>
-          <View style={styles.headerSpacer} />
-        </View>
+      <View style={styles.container}>
+        <SafeAreaView style={styles.headerSafeArea} edges={['top']}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>History</Text>
+          </View>
+        </SafeAreaView>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3498db" />
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>History</Text>
-        <View style={styles.headerSpacer} />
-      </View>
+    <View style={styles.container}>
+      <SafeAreaView style={styles.headerSafeArea} edges={['top']}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>History</Text>
+        </View>
+      </SafeAreaView>
 
       {groupedData.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -212,7 +206,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({route, navigation}) => {
           contentContainerStyle={styles.listContainer}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -221,21 +215,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+  headerSafeArea: {
+    backgroundColor: '#3498db',
+  },
   header: {
     backgroundColor: '#3498db',
-    flexDirection: 'row',
+    padding: 20,
+    paddingTop: 10,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-  },
-  headerSpacer: {
-    width: 24,
   },
   loadingContainer: {
     flex: 1,
