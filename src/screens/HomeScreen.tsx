@@ -38,7 +38,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
   const loadData = useCallback(async () => {
     try {
       const userData = await DatabaseService.getUserById(userId);
-      const measurementsData = await DatabaseService.getMeasurementsByUserId(userId);
+      const measurementsData = await DatabaseService.getCurrentWeekMeasurements(userId);
       setUser(userData);
       setMeasurements(measurementsData);
     } catch (error) {
@@ -279,6 +279,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
         </View>
       </SafeAreaView>
 
+      <View style={styles.weekIndicator}>
+        <Icon name="calendar-today" size={16} color="#666" />
+        <Text style={styles.weekIndicatorText}>Current Week Measurements</Text>
+      </View>
+
       <FlatList
         data={measurements}
         renderItem={renderMeasurement}
@@ -286,7 +291,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route, navigation}) => {
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
           <Text style={styles.emptyText}>
-            No measurement recorded. Add your first measurement!
+            No measurement recorded this week. Add your first measurement!
           </Text>
         }
       />
@@ -392,6 +397,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  weekIndicator: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  weekIndicatorText: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
   },
   listContainer: {
     padding: 16,

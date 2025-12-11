@@ -6,6 +6,7 @@ import UserSelectionScreen from '../screens/UserSelectionScreen';
 import HomeScreen from '../screens/HomeScreen';
 import AddMeasurementScreen from '../screens/AddMeasurementScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
+import HistoryScreen from '../screens/HistoryScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,6 +36,15 @@ const MainTabs = ({route}: any) => {
         initialParams={{userId}}
         options={{
           tabBarLabel: 'Statistics',
+          tabBarIcon: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryScreen}
+        initialParams={{userId}}
+        options={{
+          tabBarLabel: 'History',
           tabBarIcon: () => null,
         }}
       />

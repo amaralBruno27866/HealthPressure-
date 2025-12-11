@@ -159,6 +159,36 @@ class DatabaseService {
     return measurements;
   }
 
+  async getCurrentWeekMeasurements(userId: number): Promise<Measurement[]> {
+    if (!this.db) {
+      throw new Error('Database not initialized');
+    }
+
+    // Get current week start (Sunday)
+    const now = new Date();
+    const day = now.getDay();
+    const diff = now.getDate() - day;
+    const weekStart = new Date(now.setDate(diff));
+    weekStart.setHours(0, 0, 0, 0);
+
+    const result = await this.db.executeSql(
+      'SELECT * FROM measurements WHERE userId = ? AND date >= ? ORDER BY date DESC',
+      [userId, weekStart.toISOString()],
+    );
+
+    const measurements: Measurement[] = [];
+    for (let i = 0; i < result[0].rows.length; i++) {
+      measurements.push(result[0].rows.item(i));
+    }
+
+    return measurements;
+  }
+
+  async getAllMeasurementsByUserId(userId: number): Promise<Measurement[]> {
+    // Alias for getMeasurementsByUserId without limit
+    return this.getMeasurementsByUserId(userId);
+  }
+
   async deleteMeasurement(id: number): Promise<void> {
     if (!this.db) {
       throw new Error('Database not initialized');
